@@ -33,6 +33,9 @@ class ViewController
     var storage    : Storage!
     var storageRef : StorageReference!
 
+    // random ID Generator
+    let randID = NSUUID()
+
 
 	// store stuff from user inputs
 	var currentText: String!
@@ -182,14 +185,15 @@ class ViewController
     	}
     }
 
-
+    /*
+    	display image in scene and save to backend
+    */
     func dropImage(results: ARHitTestResult){
 
     	let width_img = chosenImage.size.width
         let height_img = chosenImage.size.height
         
         let scale = 200 / max(width_img, height_img)
-        
 
         var plane = SCNPlane(width: width_img*scale, height: height_img*scale)
 
@@ -218,8 +222,12 @@ class ViewController
         print("image: *********************************************")
         
 		sceneView.scene.rootNode.addChildNode(planeNode)
-        
-        let imageDbRef = self.storageRef.child("images/test.jpg")
+		
+
+
+		// Now save image
+        let randName   = self.randID.uuidString
+        let imageDbRef = self.storageRef.child("images/" + randName + ".jpg")
 
         var downloadURL : URL!
 
@@ -234,7 +242,7 @@ class ViewController
             }
                 downloadURL = metadata.downloadURL()
                 print("downloadURL: ", downloadURL)
-                print("==========================================================")
+
 
                 var data : NSDictionary
 		        
@@ -259,21 +267,22 @@ class ViewController
 		                , planeNode.transform.m44
 		                ]
 		        
-		        print("downloadURL type: ", type(of: downloadURL))
-		        print("***********************************************")
+
 		        data  = [ "type": "image", "loc": T, "data": downloadURL.absoluteString ]
 		        self.imageRef.childByAutoId().setValue(data)
             }
-	        
     }
 
     /*
-    	swipe right to open text box
+    	swipe right to open camera
     */
     @IBAction func openTextBox(_ sender: UISwipeGestureRecognizer) {
 
-    	showInputDialog()
-    	print("swipe Right")
+        picker.sourceType             = UIImagePickerControllerSourceType.camera
+        picker.cameraCaptureMode      = .photo
+        picker.modalPresentationStyle = .fullScreen
+        present(picker, animated: true, completion: nil)
+
     }
     
     /*
@@ -317,16 +326,11 @@ class ViewController
 	// MARK: - Image picker Logic ***********************************************************
 
     /*
-    	swipe right to open image
+    	swipe right to open text
     */    	
     @IBAction func showCamera(_ sender: UISwipeGestureRecognizer) {
         
-        print("show camera, swipe left")
-
-        picker.sourceType             = UIImagePickerControllerSourceType.camera
-        picker.cameraCaptureMode      = .photo
-        picker.modalPresentationStyle = .fullScreen
-        present(picker, animated: true, completion: nil)
+	  	showInputDialog()
 
     }
 
