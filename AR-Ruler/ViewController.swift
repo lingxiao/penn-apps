@@ -30,7 +30,12 @@ class ViewController
 	var rootRef    : DatabaseReference!
 	var contentRef : DatabaseReference!
 
+
+	// store stuff from user inputs
 	var currentText: String!
+	var chosenImage: UIImage!
+
+	var last_msg_is_image : Bool = false
 
 	let picker = UIImagePickerController()
     
@@ -143,19 +148,60 @@ class ViewController
 
     	if let results = phiAtHit.first {
 
-    		if self.currentText != nil {
+    		if last_msg_is_image {
 
-    			dropText(message: self.currentText!, results: results)
+    			print("you picked an image!!!! ******************************")
+
+    			// make plane and put image on it
+    			dropImage(results: results)
+
 
     		} else {
 
-    			print("No text saved!!!")
+	    		if self.currentText != nil {
+
+	    			dropText(message: self.currentText!, results: results)
+
+	    		} else {
+
+	    			print("No text saved!!!")
+	    		}
     		}
 
+	
     	} else {
 
     		print("no phi found")
     	}
+    }
+
+
+    func dropImage(results: ARHitTestResult){
+
+    	var plane = SCNPlane(width: 100.0, height: 100.0)
+
+		// get position of hit
+		let position = SCNVector3.positionFrom(matrix: results.worldTransform)
+
+		var transform = sceneView.session.currentFrame?.camera.transform
+        transform?.columns.3.x = 0.0
+        transform?.columns.3.y = 0.0
+        transform?.columns.3.z = 0.0
+
+		// set text node properties
+		let planeNode       = SCNNode(geometry: plane)
+		planeNode.geometry  = plane
+		planeNode.position  = position
+		planeNode.transform = SCNMatrix4Mult(SCNMatrix4.init(transform!), planeNode.transform)
+		planeNode.transform = SCNMatrix4Mult(SCNMatrix4MakeScale(0.005,0.005,0.005), planeNode.transform)
+        	
+
+        planeNode.geometry?.firstMaterial?.diffuse.contents = self.chosenImage
+        
+
+		// attach to node    	
+
+
     }
 
     /*
@@ -193,6 +239,7 @@ class ViewController
 	        //getting the input values from user
 	        let msg          = alertController.textFields?[0].text
 	        self.currentText = msg
+	        self.last_msg_is_image = false
 
 	    }	    
 	    
@@ -213,7 +260,6 @@ class ViewController
         
         print("show camera, swipe left")
 
-        // let picker = UIImagePickerController()
         picker.sourceType             = UIImagePickerControllerSourceType.camera
         picker.cameraCaptureMode      = .photo
         picker.modalPresentationStyle = .fullScreen
@@ -222,10 +268,17 @@ class ViewController
 
     }
 
-	func imagePickerController(_ picker: UIImagePickerController
-		                      , didFinishPickingMediaWithInfo info: [String: AnyObject]){
+	func imagePickerController(_ picker: UIImagePickerController, 
+      didFinishPickingMediaWithInfo info: [String : Any]){
 
 		print("delgate fired! *********************************************")
+
+		let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage 
+		self.last_msg_is_image = true
+
+		// myImageView.contentMode = .scaleAspectFit //3
+		// myImageView.image = chosenImage //4
+		picker.dismiss(animated: true)
 
 
 	}
