@@ -29,6 +29,9 @@ class ViewController
     // firebase database hooks
 	var rootRef    : DatabaseReference!
 	var contentRef : DatabaseReference!
+    var imageRef   : DatabaseReference!
+    var storage    : Storage!
+    var storageRef : StorageReference!
 
 
 	// store stuff from user inputs
@@ -47,6 +50,10 @@ class ViewController
         // setup database
         self.rootRef    = Database.database().reference()
         self.contentRef = Database.database().reference().child("contentObj")
+        self.imageRef   = Database.database().reference().child("imageObj")
+        
+        self.storage = Storage.storage()
+        self.storageRef = self.storage.reference()
 
         // set delegates
         picker.delegate = self
@@ -178,8 +185,13 @@ class ViewController
 
     func dropImage(results: ARHitTestResult){
 
-    	var plane = SCNPlane(width: 10.0, height: 10.0)
+    	let width_img = chosenImage.size.width
+        let height_img = chosenImage.size.height
+        
+        let scale = 200 / max(width_img, height_img)
+        
 
+        var plane = SCNPlane(width: width_img*scale, height: height_img*scale)
 
 		// get position of hit
 		let position = SCNVector3.positionFrom(matrix: results.worldTransform)
@@ -196,19 +208,63 @@ class ViewController
 		planeNode.transform = SCNMatrix4Mult(SCNMatrix4.init(transform!), planeNode.transform)
 		planeNode.transform = SCNMatrix4Mult(SCNMatrix4MakeScale(0.005,0.005,0.005), planeNode	.transform)
         	
+
         planeNode.geometry?.firstMaterial?.diffuse.contents = self.chosenImage
 
         print("image: *********************************************")
 
         print(self.chosenImage)
-        
-        
 
-        // UIColor.black
-        // self.chosenImage
-
+        print("image: *********************************************")
+        
 		sceneView.scene.rootNode.addChildNode(planeNode)
         
+        let imageDbRef = self.storageRef.child("images/test.jpg")
+
+        var downloadURL : URL!
+
+        let uploadTask = imageDbRef.putData(
+        	  UIImageJPEGRepresentation(self.chosenImage, 1.0)!
+        	, metadata: nil)
+        	
+        	// callback
+        	{(metadata, error) in guard let metadata = metadata else {
+                print("There was an error in uploading the image!")
+                return
+            }
+                downloadURL = metadata.downloadURL()
+                print("downloadURL: ", downloadURL)
+                print("==========================================================")
+
+                var data : NSDictionary
+		        
+		        var T = [ planeNode.transform.m11
+		                , planeNode.transform.m12
+		                , planeNode.transform.m13
+		                , planeNode.transform.m14
+		            
+		                , planeNode.transform.m21
+		                , planeNode.transform.m22
+		                , planeNode.transform.m23
+		                , planeNode.transform.m24
+		            
+		                , planeNode.transform.m31
+		                , planeNode.transform.m32
+		                , planeNode.transform.m33
+		                , planeNode.transform.m34
+		            
+		                , planeNode.transform.m41
+		                , planeNode.transform.m42
+		                , planeNode.transform.m43
+		                , planeNode.transform.m44
+		                ]
+		        
+		        print("downloadURL type: ", type(of: downloadURL))
+		        print("***********************************************")
+		        data  = [ "type": "image", "loc": T, "data": downloadURL.absoluteString ]
+		        self.imageRef.childByAutoId().setValue(data)
+            }
+	        
     }
 
     /*
@@ -272,15 +328,15 @@ class ViewController
         picker.modalPresentationStyle = .fullScreen
         present(picker, animated: true, completion: nil)
 
-
     }
 
 	func imagePickerController(_ picker: UIImagePickerController, 
-      didFinishPickingMediaWithInfo info: [String : Any]){
+      didFinishPickingMediaWithInfo info: [String : Any]) {
 
 		print("delgate fired! *********************************************")
 
-		let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage 
+		let chosenImage   = info[UIImagePickerControllerOriginalImage] as! UIImage 
+		self.chosenImage  = chosenImage
 		self.last_msg_is_image = true
 
 		// myImageView.contentMode = .scaleAspectFit //3
