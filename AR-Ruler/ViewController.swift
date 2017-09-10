@@ -125,6 +125,15 @@ class ViewController
             self.recreateText(text: text, transform: transform)
 
     	})
+
+    	imageRef.observe(.childAdded, with: {(snapshot) -> Void in
+
+            let img_url   = snapshot.childSnapshot(forPath: "data").value as! String
+            let locArray  = snapshot.childSnapshot(forPath: "loc").value as! [Float]
+            let transform = SCNMatrix4.init(m11: locArray[0], m12: locArray[1], m13: locArray[2], m14: locArray[3], m21: locArray[4], m22: locArray[5], m23: locArray[6], m24: locArray[7], m31: locArray[8], m32: locArray[9], m33: locArray[10], m34: locArray[11], m41: locArray[12], m42: locArray[13], m43: locArray[14], m44: locArray[15])
+            self.recreateImage(url: img_url, transform: transform)
+
+    	})
     }
 
     func recreateText(text: String, transform: SCNMatrix4){
@@ -141,9 +150,39 @@ class ViewController
 		print("recreated text! **************************** ")
     }
 
-    func recreateImage(){
+
+    func recreateImage(url: String, transform: SCNMatrix4){
 
 
+		DispatchQueue.global().async {
+
+            let data = try? Data(contentsOf: URL(string: url)!) 
+
+            if data != nil {
+
+			    DispatchQueue.main.async {
+
+			        let image = UIImage(data: data!)!
+			        print("got image!!: ", image, type(of: image))
+
+			        // recreate image plane
+			        let width_img  = image.size.width
+			        let height_img = image.size.height
+			        
+			        let scale = 200 / max(width_img, height_img)
+
+			        var plane = SCNPlane(width: width_img*scale, height: height_img*scale)
+
+					// set text node properties
+					let planeNode       = SCNNode(geometry: plane)
+					planeNode.transform = transform
+
+			        planeNode.geometry?.firstMaterial?.diffuse.contents = image
+					self.sceneView.scene.rootNode.addChildNode(planeNode)
+
+			    }
+            }
+		}
 
     }
 
@@ -238,7 +277,7 @@ class ViewController
         var downloadURL : URL!
 
         let uploadTask = imageDbRef.putData(
-        	  UIImageJPEGRepresentation(self.chosenImage, 1.0)!
+        	  UIImageJPEGRepresentation(self.chosenImage, 0.5)!
         	, metadata: nil)
         	
         	// callback
