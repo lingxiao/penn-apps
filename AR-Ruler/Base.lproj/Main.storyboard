@@ -43,12 +43,12 @@
                 </tapGestureRecognizer>
                 <swipeGestureRecognizer direction="right" id="e4y-VN-Psx" userLabel="Swipe Gesture Recognizer Right">
                     <connections>
-                        <action selector="openTextBox:" destination="BYZ-38-t0r" id="qp7-oA-gWW"/>
+                        <action selector="swipeRightToCamera:" destination="BYZ-38-t0r" id="USg-sH-3xM"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="left" id="MTc-7H-nnv" userLabel="Swipe Gesture Recognizer Left">
                     <connections>
-                        <action selector="showCamera:" destination="BYZ-38-t0r" id="QQX-ri-FG5"/>
+                        <action selector="swipeLeftToText:" destination="BYZ-38-t0r" id="RgD-xU-cTE"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>

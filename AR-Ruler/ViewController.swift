@@ -267,7 +267,6 @@ class ViewController
         print("image: *********************************************")
         
 		sceneView.scene.rootNode.addChildNode(planeNode)
-		
 
 
 		// Now save image
@@ -321,14 +320,31 @@ class ViewController
     /*
     	swipe right to open camera
     */
-    @IBAction func openTextBox(_ sender: UISwipeGestureRecognizer) {
+    @IBAction func swipeRightToCamera(_ sender: UISwipeGestureRecognizer) {
+		
+		// picker.sourceType             = UIImagePickerControllerSourceType.camera
+        // picker.cameraCaptureMode      = .photo
+        // picker.modalPresentationStyle = .fullScreen
+        // present(picker, animated: true, completion: nil)
 
-        picker.sourceType             = UIImagePickerControllerSourceType.camera
-        picker.cameraCaptureMode      = .photo
-        picker.modalPresentationStyle = .fullScreen
-        present(picker, animated: true, completion: nil)
+        let img = sceneView.session.currentFrame?.capturedImage
+        
+        let ciimg = img as? CIImage
+        
+        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        
+        print("image: ", img)
+        print("CIimage: ", type(of: ciimg), ciimg)
+        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+
+        // capturedImage
 
     }
+    
+    @IBAction func swipeLeftToText(_ sender: UISwipeGestureRecognizer) {
+        showInputDialog()
+    }
+    
     
     /*
     	message dialogue
@@ -369,15 +385,6 @@ class ViewController
 	}    
 
 	// MARK: - Image picker Logic ***********************************************************
-
-    /*
-    	swipe right to open text
-    */    	
-    @IBAction func showCamera(_ sender: UISwipeGestureRecognizer) {
-        
-	  	showInputDialog()
-
-    }
 
 	func imagePickerController(_ picker: UIImagePickerController, 
       didFinishPickingMediaWithInfo info: [String : Any]) {
