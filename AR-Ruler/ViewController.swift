@@ -322,20 +322,20 @@ class ViewController
     */
     @IBAction func swipeRightToCamera(_ sender: UISwipeGestureRecognizer) {
 		
-		// picker.sourceType             = UIImagePickerControllerSourceType.camera
-        // picker.cameraCaptureMode      = .photo
-        // picker.modalPresentationStyle = .fullScreen
-        // present(picker, animated: true, completion: nil)
+		picker.sourceType             = UIImagePickerControllerSourceType.camera
+        picker.cameraCaptureMode      = .photo
+        picker.modalPresentationStyle = .fullScreen
+        present(picker, animated: true, completion: nil)
 
-        let img = sceneView.session.currentFrame?.capturedImage
-        
-        let ciimg = img as? CIImage
-        
-        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-        
-        print("image: ", img)
-        print("CIimage: ", type(of: ciimg), ciimg)
-        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+
+        // some clever tricks with grabbing raw feed from arkit
+        // let img = sceneView.session.currentFrame?.capturedImage
+        // let ciimg = img as? CIImage
+        // print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+
+        // print("image: ", type(of: img))
+        // // print("CIimage: ", type(of: ciimg), ciimg)
+        // print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
         // capturedImage
 
