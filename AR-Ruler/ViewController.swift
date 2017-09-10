@@ -178,7 +178,9 @@ class ViewController
 
     func dropImage(results: ARHitTestResult){
 
-    	var plane = SCNPlane(width: 100.0, height: 100.0)
+    	var plane = SCNPlane(width: 10.0, height: 10.0)
+
+
 
 		// get position of hit
 		let position = SCNVector3.positionFrom(matrix: results.worldTransform)
@@ -193,15 +195,19 @@ class ViewController
 		planeNode.geometry  = plane
 		planeNode.position  = position
 		planeNode.transform = SCNMatrix4Mult(SCNMatrix4.init(transform!), planeNode.transform)
-		planeNode.transform = SCNMatrix4Mult(SCNMatrix4MakeScale(0.005,0.005,0.005), planeNode.transform)
+		planeNode.transform = SCNMatrix4Mult(SCNMatrix4MakeScale(0.005,0.005,0.005), planeNode	.transform)
         	
-
         planeNode.geometry?.firstMaterial?.diffuse.contents = self.chosenImage
+
+        print("image: *********************************************")
+
+        print(self.chosenImage)
+
+        // UIColor.black
+        // self.chosenImage
+
+		sceneView.scene.rootNode.addChildNode(planeNode)
         
-
-		// attach to node    	
-
-
     }
 
     /*
@@ -312,7 +318,7 @@ class ViewController
 		textNode.transform = SCNMatrix4Mult(SCNMatrix4MakeScale(0.005,0.005,0.005), textNode.transform)
         	
 
-        textNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
+        textNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
         
 
 		// attach to node
