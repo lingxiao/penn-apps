@@ -181,7 +181,6 @@ class ViewController
     	var plane = SCNPlane(width: 10.0, height: 10.0)
 
 
-
 		// get position of hit
 		let position = SCNVector3.positionFrom(matrix: results.worldTransform)
 
@@ -202,6 +201,8 @@ class ViewController
         print("image: *********************************************")
 
         print(self.chosenImage)
+        
+        
 
         // UIColor.black
         // self.chosenImage
