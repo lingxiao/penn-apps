@@ -118,12 +118,12 @@ class ViewController
     func syncData(){
 
         contentRef.observe(.childAdded, with: {(snapshot) -> Void in
-            // let snap = snapshot.value as! [String: Any]
-    		// print("snapshot added: ", snapshot)
+
             let text      = snapshot.childSnapshot(forPath: "data").value as! String
             let locArray  = snapshot.childSnapshot(forPath: "loc").value as! [Float]
             let transform = SCNMatrix4.init(m11: locArray[0], m12: locArray[1], m13: locArray[2], m14: locArray[3], m21: locArray[4], m22: locArray[5], m23: locArray[6], m24: locArray[7], m31: locArray[8], m32: locArray[9], m33: locArray[10], m34: locArray[11], m41: locArray[12], m42: locArray[13], m43: locArray[14], m44: locArray[15])
             self.recreateText(text: text, transform: transform)
+
     	})
     }
 
@@ -139,6 +139,12 @@ class ViewController
 		sceneView.scene.rootNode.addChildNode(textNode)
 
 		print("recreated text! **************************** ")
+    }
+
+    func recreateImage(){
+
+
+
     }
 
 	// MARK: - Event Listener ***********************************************************
