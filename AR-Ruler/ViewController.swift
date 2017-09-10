@@ -20,6 +20,8 @@ import Firebase
 class ViewController
 	: UIViewController 
 	, ARSCNViewDelegate    
+	, UIImagePickerControllerDelegate
+	, UINavigationControllerDelegate
 	{
 
     @IBOutlet weak var sceneView: ARSCNView!
@@ -29,6 +31,8 @@ class ViewController
 	var contentRef : DatabaseReference!
 
 	var currentText: String!
+
+	let picker = UIImagePickerController()
     
 
     override func viewDidLoad() {
@@ -38,6 +42,9 @@ class ViewController
         // setup database
         self.rootRef    = Database.database().reference()
         self.contentRef = Database.database().reference().child("contentObj")
+
+        // set delegates
+        picker.delegate = self
 
         // debug database
         // conditionRef.setValue("hello world")
@@ -152,10 +159,12 @@ class ViewController
     }
 
     /*
-    	swipe to put on message
+    	swipe right to open text box
     */
     @IBAction func openTextBox(_ sender: UISwipeGestureRecognizer) {
+
     	showInputDialog()
+    	print("swipe Right")
     }
     
     /*
@@ -194,6 +203,32 @@ class ViewController
 	    //finally presenting the dialog box
 	    self.present(alertController, animated: true, completion: nil)
 	}    
+
+	// MARK: - Image picker Logic ***********************************************************
+
+    /*
+    	swipe right to open image
+    */    	
+    @IBAction func showCamera(_ sender: UISwipeGestureRecognizer) {
+        
+        print("show camera, swipe left")
+
+        // let picker = UIImagePickerController()
+        picker.sourceType             = UIImagePickerControllerSourceType.camera
+        picker.cameraCaptureMode      = .photo
+        picker.modalPresentationStyle = .fullScreen
+        present(picker, animated: true, completion: nil)
+
+
+    }
+
+	func imagePickerController(_ picker: UIImagePickerController
+		                      , didFinishPickingMediaWithInfo info: [String: AnyObject]){
+
+		print("delgate fired! *********************************************")
+
+
+	}
 
 	// MARK: - create objects ***********************************************************
 

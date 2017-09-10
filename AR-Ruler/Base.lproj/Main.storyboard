@@ -24,6 +24,7 @@
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="ovl-vJ-Aev" appends="YES" id="Pi2-Xw-UZz"/>
                                     <outletCollection property="gestureRecognizers" destination="e4y-VN-Psx" appends="YES" id="Tgg-li-NJ1"/>
+                                    <outletCollection property="gestureRecognizers" destination="MTc-7H-nnv" appends="YES" id="O2C-3P-6G4"/>
                                 </connections>
                             </arscnView>
                         </subviews>
@@ -40,9 +41,14 @@
                         <action selector="onTap:" destination="BYZ-38-t0r" id="yYd-yY-mof"/>
                     </connections>
                 </tapGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="e4y-VN-Psx">
+                <swipeGestureRecognizer direction="right" id="e4y-VN-Psx" userLabel="Swipe Gesture Recognizer Right">
                     <connections>
                         <action selector="openTextBox:" destination="BYZ-38-t0r" id="qp7-oA-gWW"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="MTc-7H-nnv" userLabel="Swipe Gesture Recognizer Left">
+                    <connections>
+                        <action selector="showCamera:" destination="BYZ-38-t0r" id="QQX-ri-FG5"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
