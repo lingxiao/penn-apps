@@ -36,7 +36,6 @@ class ViewController
     // random ID Generator
     let randID = NSUUID()
 
-
 	// store stuff from user inputs
 	var currentText: String!
 	var chosenImage: UIImage!
@@ -45,7 +44,6 @@ class ViewController
 
 	let picker = UIImagePickerController()
     
-
     override func viewDidLoad() {
 
         super.viewDidLoad()
