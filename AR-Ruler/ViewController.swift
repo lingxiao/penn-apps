@@ -16,6 +16,7 @@ import SceneKit
 import Foundation
 import SceneKit
 import Firebase
+import AudioToolbox
 
 class ViewController
 	: UIViewController 
@@ -82,6 +83,8 @@ class ViewController
 
     	// register to database
     	syncData()
+
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -225,6 +228,8 @@ class ViewController
     	} else {
 
     		print("no phi found")
+	    	AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate)) 
+
     	}
     }
 
